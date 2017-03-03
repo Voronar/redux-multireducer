@@ -125,7 +125,7 @@ export default {
   posts: new List(),
 };
 ```
-Just create Redux module class and reuse it making so many instances as we need.
+Просто создаём класс Redux-модуля и переиспользуем его, делаю столько экземпляров, сколько требуется.
 
 #### ```src/redux/modules/reducer.js``` - Главный редьюсер
 
