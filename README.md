@@ -1,4 +1,4 @@
-# Redux multireducer concept
+# Redux multireducer concept ([RU](https://github.com/Voronar/redux-multireducer/blob/master/README.ru.md))
 ## The problem
 When we want to reuse our single reducer function for multiple reducer instances we face a problem. Redux [creator](https://github.com/gaearon) write:
 > As an example, let's say that we want to track multiple counters in our application, named A, B, and C. We define our initial ```counter``` reducer, and we use ```combineReducers``` to set up our state:
@@ -29,18 +29,18 @@ const rootReducer = combineReducers({
 #### To solve this problem we need a ```specific``` action types for the specialized version of our reducer function.
 
 ## FP solution
-[Dan](https://github.com/gaearon) offers a [solution](http://redux.js.org/docs/recipes/reducers/ReusingReducerLogic.html#customizing-behavior-with-higher-order-reducers) from a world of *functional programming* - higher-order reducer. He wraps the reducer with a higher-order function (*_hof_*) and specify an action type this suffix/prefix passing it from *_hof_*. The same approach (he specifies action object with special ```meta-key```) use [Erik Rasmussen](https://github.com/erikras) in his [library](https://github.com/erikras/multireducer).
+[Dan](https://github.com/gaearon) offers a [solution](http://redux.js.org/docs/recipes/reducers/ReusingReducerLogic.html#customizing-behavior-with-higher-order-reducers) from a world of *functional programming* - higher-order reducer. He wraps the reducer with a higher-order function (*_HOF_*) and specify an action type this suffix/prefix passing it from *_HOF_*. The same approach (he specifies action object with special ```meta-key```) use [Erik Rasmussen](https://github.com/erikras) in his [library](https://github.com/erikras/multireducer).
 
 ## OOP solution
 I approach more or less the same solution but without wrappers, suffixes/prefixes, meta-keys, etc. I highlighted ```specific``` word in a solution section not without a reason. What if we do an action type **REALY** unique? Greeting, [```Symbol```](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Symbol). From MDN:
 >Every symbol value returned from Symbol() is unique.  A symbol value may be used as an identifier for object properties; this is the data type's only purpose.
 
-Perfect choice, is not it? And why we need *object-oriented programming*? OOP help us to organize the code and make our action types unique. Redux ingredients (or *Redux module*) organization (reducer, constants, action creators) was inspired by a [modular redux](https://github.com/erikras/ducks-modular-redux) approach from all the same developer [Erik Rasmussen](https://github.com/erikras).
+Perfect choice, is not it? And why we need *object-oriented programming*? OOP help us to optimize the code organization and make our action types unique. Redux ingredients (or *Redux module*) organization (reducer, constants, action creators) was inspired by a [modular redux](https://github.com/erikras/ducks-modular-redux) approach from all the same developer [Erik Rasmussen](https://github.com/erikras).
 Let's try the approach in a list view React application example (working example included in this repository, just clone it, ```npm i``` and ```npm run start```).
 
 ## Example (list view React application)
 ### Redux ```list``` module
-Redux ```list``` module is a directory that includes redux module class and required reducer instances.
+Redux ```list``` module is a directory that includes redux module class and required module instances.
 
 #### ```src/redux/modules/list/List.js``` - Redux list module class
 
