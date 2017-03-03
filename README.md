@@ -86,7 +86,7 @@ export default class List {
     };
   }
   removeItem = (index) => {
-    return async (dispatch) => {
+    return (dispatch) => {
       dispatch({
         type: this.REMOVE_ITEM,
         payload: {
