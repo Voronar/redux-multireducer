@@ -38,6 +38,9 @@ I approach more or less the same solution but without wrappers, suffixes/prefixe
 Perfect choice, is not it? And why we need *object-oriented programming*? OOP help us to optimize the code organization and make our action types unique. Redux ingredients (or *Redux module*) organization (reducer, constants, action creators) was inspired by a [modular redux](https://github.com/erikras/ducks-modular-redux) approach from all the same developer [Erik Rasmussen](https://github.com/erikras).
 Let's try the approach in a list view React application example (working example included in this repository, just clone it, ```npm i``` and ```npm run start```).
 
+> ️️ **NOTICE** ️️ ```Symbol``` constants impose some restrictions for  several of Redux's defining features, such as time travel debugging, and recording and replaying actions. More information read [there](http://redux.js.org/docs/faq/Actions.html#actions-string-constants).
+> 😉 But this problem is [simple to resolve](https://github.com/Voronar/redux-multireducer/blob/master/src/redux/modules/list/List.devtools.ready.js).
+
 ## Example (list view React application)
 ### Redux ```list``` module
 Redux ```list``` module is a directory that includes redux module class and required module instances.
