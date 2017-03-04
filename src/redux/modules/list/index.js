@@ -1,6 +1,6 @@
 import List from './List';
 
 export default {
-  users: new List(),
-  posts: new List(),
+  users: new List('users'),
+  posts: new List('posts'),
 };
