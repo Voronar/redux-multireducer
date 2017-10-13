@@ -1,62 +1,60 @@
 import * as services from './../../../api/services';
+import { createAction } from 'redux-actions';
 
-const initialState = {
-  list: [],
-};
-
-function getListReducer(state, action) {
-  return {
-    ...state,
-    list: action.payload.list,
-  };
+export function handlePayload(field) {
+  return (state, { payload }) => ({ ...state, [field]: payload });
 }
 
-function removeItemReducer(state, action) {
-  const { payload } = action;
-  const list = state.list.filter((item, i) => i !== payload.index);
-  return {
-    ...state,
-    list,
-  };
-}
+export class List {
+  constructor(namespace) {
+    this.namespace = namespace;
+    this.transformers = {};
+    this.initialState = {
+      list: [],
+      isFetching: false,
+    };
+    
+    this.removeItem = createAction((`${namespace}/removeItem`));
+    this.setList = createAction((`${namespace}/setList`));
+    this.setFetchingStatus = createAction((`${namespace}/setFetchingStatus`));
 
-export default class List {
-  constructor() {
-    this.GET_LIST = Symbol('GET_LIST');
-    this.REMOVE_ITEM = Symbol('REMOVE_ITEM');
-  }
-  getList = (serviceName) => {
-    return async (dispatch) => {
-      const list = await services[serviceName].get();
-      dispatch({
-        type: this.GET_LIST,
-        payload: {
-          list,
-          serviceName,
-        },
-      });
+    this.reducer = {
+      [this.setList]: handlePayload('list'),
+      [this.setFetchingStatus]: handlePayload('isFetching'),
+      [this.removeItem]: (state, { payload }) => ({
+        ...state,
+        list: state.list.filter((item, i) => i !== payload),
+      }),
     };
   }
-  removeItem = (index) => {
-    return (dispatch) => {
-      dispatch({
-        type: this.REMOVE_ITEM,
-        payload: {
-          index,
-        },
-      });
-    };
+
+  getList = (serviceName, payload = {}) => async (dispatch) => {
+    try {
+      dispatch(this.setFetchingStatus(true));
+
+      const list = await services[serviceName].get(payload);
+
+      dispatch(this.setList((this.transformers.getList || (s => s))(list)));
+      dispatch(this.setFetchingStatus(false));
+    } catch (error) {
+      dispatch(this.setFetchingStatus(false));
+    }
   }
-  reducer = (state = initialState, action) => {
-    switch (action.type) {
-      case this.GET_LIST:
-        return getListReducer(state, action);
 
-      case this.REMOVE_ITEM:
-        return removeItemReducer(state, action);
+  removeRemoteItem = (serviceName, payload = {}, callback) => async (dispatch) => {
+    try {
+      dispatch(this.setFetchingStatus(true));
 
-      default:
-        return state;
+      const response = await services[serviceName].delete(payload);
+      dispatch(this.setFetchingStatus(false));
+
+      if (callback) {
+        callback(response);
+      } else {
+        dispatch(this.getList());
+      }
+    } catch (error) {
+      dispatch(this.setFetchingStatus(false));
     }
   }
 }
